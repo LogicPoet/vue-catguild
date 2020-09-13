@@ -54,37 +54,14 @@ export const constantRoutes = [
       meta: { title: '仪表盘', icon: 'dashboard' }
     }]
   },
-
   {
     path: '/posts',
     component: Layout,
     redirect: '/posts/list',
     name: 'Posts',
-    meta: { title: '文章', icon: 'documentation' },
-    children: [
-      {
-        path: 'list',
-        name: 'List',
-        component: () => import('@/views/table/complex-table'),
-        meta: { title: '所有文章', icon: 'list' }
-      },
-      {
-        path: 'write',
-        name: 'Write',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '写文章', icon: 'edit' }
-      }
-    ]
-  },
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/list',
-    name: 'Example',
     meta: {
       title: '文章',
-      icon: 'el-icon-s-help'
+      icon: 'documentation'
     },
     children: [
       {
@@ -95,41 +72,19 @@ export const constantRoutes = [
       },
       {
         path: 'create',
-        component: () => import('@/views/example/create'),
+        component: () => import('@/views/posts/create'),
         name: 'CreateArticle',
         meta: { title: '写文章', icon: 'edit' }
       },
       {
         path: 'edit/:id(\\d+)',
-        component: () => import('@/views/example/edit'),
+        component: () => import('@/views/posts/edit'),
         name: 'EditArticle',
-        meta: { title: '写文章', noCache: true, activeMenu: '/example/list' },
+        meta: { title: '写文章', noCache: true, activeMenu: '/posts/list' },
         hidden: true
       }
     ]
   },
-
-  // {
-  //   path: '/example',
-  //   component: Layout,
-  //   redirect: '/example/table',
-  //   name: 'Example',
-  //   meta: { title: 'Example', icon: 'el-icon-s-help' },
-  //   children: [
-  //     {
-  //       path: 'table',
-  //       name: 'Table',
-  //       component: () => import('@/views/table/index'),
-  //       meta: { title: 'Table', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'tree',
-  //       name: 'Tree',
-  //       component: () => import('@/views/tree/index'),
-  //       meta: { title: 'Tree', icon: 'tree' }
-  //     }
-  //   ]
-  // },
 
   {
     path: '/form',
