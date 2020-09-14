@@ -48,7 +48,7 @@
         
           <router-link :to="'/example/edit/'+row.id" class="link-type">
             <span>{{ row.title }}</span>
-            <el-tag>{{ row.type | typeFilter }}</el-tag>
+            <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
           </router-link>
        
 
@@ -63,19 +63,19 @@
       </el-table-column>
       <el-table-column label="分类" width="110px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.author }}</span>
+          <span>{{ row.category }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">
+      <!-- <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">
         <template slot-scope="{row}">
           <span style="color:red;">{{ row.reviewer }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="标签" width="80px">
+      </el-table-column> -->
+      <!-- <el-table-column label="标签" width="80px">
         <template slot-scope="{row}">
           <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="访问" align="center" width="95">
         <template slot-scope="{row}">
           <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
@@ -84,7 +84,7 @@
       </el-table-column>
       <el-table-column label="发布时间" width="150px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ row.lastModification | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
@@ -92,10 +92,10 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>
-          <el-button v-if="row.status!='published'" size="mini" type="success" @click="handleModifyStatus(row,'published')">
+          <el-button v-if="row.status!='1'" size="mini" type="success" @click="handleModifyStatus(row,'1')">
             发布
           </el-button>
-          <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
+          <el-button v-if="row.status!='0'" size="mini" @click="handleModifyStatus(row,'0')">
             草稿
           </el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
@@ -178,10 +178,11 @@ export default {
   components: { Pagination },
   directives: { waves },
   filters: {
+    //: 状态框颜色
     statusFilter(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'info',
+        1: 'success',
+        0: 'info',
         deleted: 'danger'
       }
       return statusMap[status]
@@ -207,7 +208,8 @@ export default {
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
-      statusOptions: ['published', 'draft', 'deleted'],
+      // 状态类型数组
+      statusOptions: ['已发布', '草稿'],
       showReviewer: false,
       temp: {
         id: undefined,
@@ -216,7 +218,7 @@ export default {
         timestamp: new Date(),
         title: '',
         type: '',
-        status: 'published'
+        status: '已发布'
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -241,13 +243,15 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+        this.list = response.data
+        console.log(response.data.items)
+        console.log(response.data)
+        // this.total = response.data.total
 
         // Just to simulate the time of the request
-        setTimeout(() => {
+        // setTimeout(() => {
           this.listLoading = false
-        }, 1.5 * 1000)
+        // }, 1.5 * 1000)
       })
     },
     handleFilter() {
@@ -282,7 +286,7 @@ export default {
         remark: '',
         timestamp: new Date(),
         title: '',
-        status: 'published',
+        status: '已发布',
         type: ''
       }
     },

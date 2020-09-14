@@ -12,8 +12,8 @@ export function getInfo(token) {
   return request({
     url: '/auth/info',
     method: 'post',
-    // params: { token }
-    data: token
+    params: { token }
+    // data: token
   })
 }
 
