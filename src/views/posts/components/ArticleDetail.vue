@@ -5,7 +5,7 @@
       <sticky :z-index="10" :class-name="'sub-navbar '+postForm.status">
         <CommentDropdown v-model="postForm.comment_disabled" />
         <PlatformDropdown v-model="postForm.platforms" />
-        <SourceUrlDropdown v-model="postForm.source_uri" />
+        <SourceUrlDropdown v-model="postForm.sourceUri" />
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
           Publish
         </el-button>
@@ -59,18 +59,18 @@
         </el-row> -->
 
         <el-form-item style="margin-bottom: 40px;" label-width="70px" label="摘要:">
-          <el-input v-model="postForm.content_short" :rows="1" type="textarea" class="article-textarea" autosize placeholder="Please enter the content" />
+          <el-input v-model="postForm.contentShort" :rows="1" type="textarea" class="article-textarea" autosize placeholder="Please enter the content" />
           <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}words</span>
         </el-form-item>
 
         <el-form-item prop="content" style="margin-bottom: 30px;">
           <!-- <Tinymce ref="editor" v-model="postForm.content" :height="400" /> -->
-           <markdown-editor ref="markdownEditor" v-model="postForm.content" height="600px" />
+          <markdown-editor ref="markdownEditor" v-model="postForm.content" height="600px" />
         <!-- <markdown-editor ref="markdownEditor" v-model="postForm.content" :options="{hideModeSwitch:true,previewStyle:'tab'}" height="200px" /> -->
         </el-form-item>
 
-        <!-- <el-form-item prop="image_uri" style="margin-bottom: 30px;">
-          <Upload v-model="postForm.image_uri" />
+        <!-- <el-form-item prop="imageUri" style="margin-bottom: 30px;">
+          <Upload v-model="postForm.imageUri" />
         </el-form-item> -->
         <el-button style="margin-top:80px;" type="primary" icon="el-icon-document" @click="getHtml">
           Get HTML
@@ -88,18 +88,19 @@ import MDinput from '@/components/MDinput'
 import MarkdownEditor from '@/components/MarkdownEditor'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { validURL } from '@/utils/validate'
-import { fetchArticle } from '@/api/article'
+import { fetchArticle,saveArticle } from '@/api/article'
 import { searchUser } from '@/api/remote-search'
 import Warning from './Warning'
 import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
 
 const defaultForm = {
-  status: 'draft',
+  status: '1',
   title: '', // 文章题目
   content: '', // 文章内容
-  content_short: '', // 文章摘要
-  source_uri: '', // 文章外链
-  image_uri: '', // 文章图片
+  contentHtml: '', // 文章内容html格式
+  contentShort: '', // 文章摘要
+  sourceUri: '', // 文章外链
+  imageUri: '', // 文章图片
   display_time: undefined, // 前台展示时间
   id: undefined,
   platforms: ['a-platform'],
@@ -148,18 +149,18 @@ export default {
       loading: false,
       userListOptions: [],
       rules: {
-        image_uri: [{ validator: validateRequire }],
+        imageUri: [{ validator: validateRequire }],
         title: [{ validator: validateRequire }],
         content: [{ validator: validateRequire }],
-        source_uri: [{ validator: validateSourceUri, trigger: 'blur' }]
+        sourceUri: [{ validator: validateSourceUri, trigger: 'blur' }]
       },
       tempRoute: {},
-      html: '',
+      html: ''
     }
   },
   computed: {
     contentShortLength() {
-      return this.postForm.content_short.length
+      return this.postForm.contentShort.length
     },
     displayTime: {
       // set and get is useful when the data
@@ -192,7 +193,7 @@ export default {
 
         // just for test
         this.postForm.title += `   Article Id:${this.postForm.id}`
-        this.postForm.content_short += `   Article Id:${this.postForm.id}`
+        this.postForm.contentShort += `   Article Id:${this.postForm.id}`
 
         // set tagsview title
         this.setTagsViewTitle()
@@ -212,18 +213,23 @@ export default {
       const title = 'Edit Article'
       document.title = `${title} - ${this.postForm.id}`
     },
+    // 发布文章
     submitForm() {
       console.log(this.postForm)
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true
+          this.postForm.status = 0
+          saveArticle(this.postForm).then(res => {
+            console.log(res)
+          })
           this.$notify({
             title: '成功',
             message: '发布文章成功',
             type: 'success',
             duration: 2000
           })
-          this.postForm.status = 'published'
+          // this.postForm.status = 'published'
           this.loading = false
         } else {
           console.log('error submit!!')
@@ -231,6 +237,7 @@ export default {
         }
       })
     },
+    // 保存操作
     draftForm() {
       if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
         this.$message({

@@ -45,16 +45,14 @@
           <!-- <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
           <el-tag>{{ row.type | typeFilter }}</el-tag> -->
 
-        
           <router-link :to="'/example/edit/'+row.id" class="link-type">
             <span>{{ row.title }}</span>
             <el-tag>{{ row.type | typeFilter }}</el-tag>
           </router-link>
-       
 
         </template>
       </el-table-column>
-       <el-table-column label="状态" class-name="status-col" width="100">
+      <el-table-column label="状态" class-name="status-col" width="100">
         <template slot-scope="{row}">
           <el-tag :type="row.status | statusFilter">
             {{ row.status }}
