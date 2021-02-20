@@ -51,28 +51,28 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '仪表盘', icon: 'dashboard' }
+      meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
 
   {
-    path: '/posts',
+    path: '/user_manager',
     component: Layout,
-    redirect: '/posts/list',
-    name: 'Posts',
-    meta: { title: '文章', icon: 'documentation' },
+    redirect: '/user_manager/staff',
+    name: 'User',
+    meta: { title: '用户管理', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'list',
-        name: 'List',
-        component: () => import('@/views/table/complex-table'),
-        meta: { title: '所有文章', icon: 'list' }
+        path: 'staff',
+        name: 'Staff',
+        component: () => import('@/views/user_manager/staff/index'),
+        meta: { title: '职员管理', icon: 'table' }
       },
       {
-        path: 'write',
-        name: 'Write',
+        path: 'tree',
+        name: 'Tree',
         component: () => import('@/views/tree/index'),
-        meta: { title: '写文章', icon: 'edit' }
+        meta: { title: 'Tree', icon: 'tree' }
       }
     ]
   },
@@ -80,56 +80,24 @@ export const constantRoutes = [
   {
     path: '/example',
     component: Layout,
-    redirect: '/example/list',
+    redirect: '/example/table',
     name: 'Example',
-    meta: {
-      title: '文章',
-      icon: 'el-icon-s-help'
-    },
+    meta: { title: 'Example', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'list',
-        component: () => import('@/views/posts/list'),
-        name: 'ArticleList',
-        meta: { title: '所有文章', icon: 'list' }
+        path: 'table',
+        name: 'Table',
+        component: () => import('@/views/table/index'),
+        meta: { title: 'Table', icon: 'table' }
       },
       {
-        path: 'create',
-        component: () => import('@/views/example/create'),
-        name: 'CreateArticle',
-        meta: { title: '写文章', icon: 'edit' }
-      },
-      {
-        path: 'edit/:id(\\d+)',
-        component: () => import('@/views/example/edit'),
-        name: 'EditArticle',
-        meta: { title: '写文章', noCache: true, activeMenu: '/example/list' },
-        hidden: true
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('@/views/tree/index'),
+        meta: { title: 'Tree', icon: 'tree' }
       }
     ]
   },
-
-  // {
-  //   path: '/example',
-  //   component: Layout,
-  //   redirect: '/example/table',
-  //   name: 'Example',
-  //   meta: { title: 'Example', icon: 'el-icon-s-help' },
-  //   children: [
-  //     {
-  //       path: 'table',
-  //       name: 'Table',
-  //       component: () => import('@/views/table/index'),
-  //       meta: { title: 'Table', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'tree',
-  //       name: 'Tree',
-  //       component: () => import('@/views/tree/index'),
-  //       meta: { title: 'Tree', icon: 'tree' }
-  //     }
-  //   ]
-  // },
 
   {
     path: '/form',
